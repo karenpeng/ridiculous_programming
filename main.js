@@ -10,14 +10,14 @@
     var h = window.innerHeight;
 
     function drawGrid() {
-      for (var x = 20; x < w - 20; x += 20) {
+      for (var x = 20; x < w; x += 20) {
         context.beginPath();
         context.moveTo(x, 0);
         context.lineTo(x, h);
         context.strokeStyle = '#ddd';
         context.stroke();
       }
-      for (var y = 20; y < h - 20; y += 20) {
+      for (var y = 20; y < h; y += 20) {
         context.beginPath();
         context.moveTo(0, y);
         context.lineTo(w, y);
@@ -38,10 +38,12 @@
 
     curvyLine.prototype = {
       beginLine: function (p) {
-        this.preP = p - [10, 10];
+        //this.path.add(p);
+        this.preP = p - 10;
       },
       addPoint: function (p) {
-        if (p.x - this.preP.x >= 10) {
+        console.log(p.x, this.preP.x);
+        if (p.x - this.preP.x === 10) {
           console.log(p.x, this.preP.x);
           this.path.add(p);
           this.preP = p;
