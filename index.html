@@ -23,6 +23,7 @@
         left:0;
         width: 50%;
         height: 100%;
+        border: black solid 1px;
       }
     </style>
   </head>
@@ -34,9 +35,25 @@
   <script type="text/javascript" charset="utf-8">
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
-    //var JavaScriptMode = require("ace/mode/javascript").Mode;
-    //editor.getSession().setMode(new JavaScriptMode());
     editor.getSession().setMode("ace/mode/javascript");
+  </script>
+  <script type="text/javascript">
+    // var canvas = document.getElementById('myCanvas');
+    // var context = canvas.getContext('2d');
+    // var w = window.innerWidth / 2;
+    // var h = window.innerHeight;
+    // for(var x = 10; x< w-10; x+=10){
+    //   context.beginPath();
+    //   context.moveTo(x, 0);
+    //   context.lineTo(x, h);
+    //   context.stroke();
+    // }
+    // for(var y = 10; y< h-10; y+=10){
+    //   context.beginPath();
+    //   context.moveTo(0, y);
+    //   context.lineTo(w, y);
+    //   context.stroke();
+    // }
   </script>
   <script type="text/paperscript" src="main.js" canvas="myCanvas"></script>
 </html>
