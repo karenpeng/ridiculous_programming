@@ -1,8 +1,10 @@
-    tool.minDistance = 1;
-    tool.maxDistance = 20;
+    tool.minDistance = 4;
+    tool.maxDistance = 50;
 
-    var curvyLines = [];
     var c;
+    var pattern = [];
+    var patterns = [];
+    var theta = 0;
 
     var canvas = document.getElementById('myCanvas');
     var context = canvas.getContext('2d');
@@ -29,57 +31,46 @@
     function curvyLine() {
       this.path = new Path();
       this.path.strokeColor = 'black';
-      this.path.fullySelected = true;
-      this.preP = {
-        x: 0,
-        y: 0
-      };
+      this.diff = [];
     }
-
     curvyLine.prototype = {
-      beginLine: function (p) {
-        //this.path.add(p);
-        this.preP = p - 10;
+      begin: function (p) {
+        this.path.add(p);
       },
-      addPoint: function (p) {
-        console.log(p.x, this.preP.x);
-        if (p.x - this.preP.x === 10) {
-          console.log(p.x, this.preP.x);
-          this.path.add(p);
-          this.preP = p;
-        }
+      middle: function (m, p) {
+        this.diff.push(m);
+        this.path.add(p);
       },
-      endLine: function () {
+      end: function () {
         this.path.smooth();
       }
     };
 
     function onMouseDown(event) {
       c = new curvyLine();
-      c.beginLine(event.point);
+      c.begin(event.point);
     }
 
     function onMouseDrag(event) {
-      c.addPoint(event.point);
+      c.middle(event.delta, event.point);
     }
 
     function onMouseUp(event) {
-      c.endLine();
-      curvyLines.push(c);
-      //console.log(c);
+      c.end();
+      patterns.push(c);
     }
 
     function onFrame(event) {
-      drawGrid();
-      curvyLines.forEach(function (cl) {
-        for (var i = 0; i < cl.path.segments.length; i++) {
-          var p1 = cl.path.segments[i];
-          for (var j = i + 1; j < cl.path.segments.length; j++) {
-            var p2 = cl.path.segments[j];
-            if (p2.x < p1.x) {
-              //
-            }
-          }
-        }
-      });
+
+      //setTimeout(function () {
+      //drawGrid();
+
+      if (patterns.length > 1) {
+        patterns[1].path.segments.forEach(function (s) {
+          s.point.y += Math.sin(theta) * 200;
+          theta += 0.01;
+        });
+      }
+
+      //}, 200);
     }
