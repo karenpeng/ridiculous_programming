@@ -60,17 +60,36 @@
       patterns.push(c);
     }
 
-    function onFrame(event) {
+    function loop(fn, rate) {
+      setTimeout(function () {
+        requestAnimationFrame(function () {
+          loop(fn, rate);
+        });
+        fn();
+      }, 1000 / rate);
+    }
 
-      //setTimeout(function () {
-      //drawGrid();
-
+    loop(function () {
       if (patterns.length > 1) {
         patterns[1].path.segments.forEach(function (s) {
-          s.point.y += Math.sin(theta) * 200;
+          s.point.y = Math.sin(theta) * 200 + 200;
           theta += 0.01;
         });
+        console.log(theta);
       }
+    }, 200);
 
-      //}, 200);
-    }
+     // function onFrame(event) {
+
+     //   //setTimeout(function () {
+     //   //drawGrid();
+
+     //   if (patterns.length > 1) {
+     //     patterns[1].path.segments.forEach(function (s) {
+     //       s.point.y += Math.sin(theta) * 200;
+     //       theta += 0.01;
+     //     });
+     //   }
+
+     //   //}, 200);
+     // }
