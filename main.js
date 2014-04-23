@@ -32,6 +32,7 @@
       this.path = new Path();
       this.path.strokeColor = 'black';
       this.diff = [];
+      this.path.fullySelected = true;
     }
     curvyLine.prototype = {
       begin: function (p) {
@@ -82,19 +83,23 @@
     };
 
     var a;
+    var counter = 0;
 
     function onFrame(event) {
       drawGrid();
 
       if (patterns.length > 1) {
         a = new patternCreator(patterns[0].diff);
-        patterns[1].path.segments.forEach(function (s) {
-          var result = a.generate();
-          //console.log(result);
-          //console.log(result.point.x, result.point.y);
-          //console.log(result.x);
-          s.point.y += result.y;
-          //theta += 0.0001;
-        });
+        if (counter < patterns[1].path.segments.length) {
+          patterns[1].path.segments.forEach(function (s) {
+            var result = a.generate();
+            counter++;
+            //console.log(result);
+            //console.log(result.point.x, result.point.y);
+            //console.log(result.x);
+            s.point.y += (result.y - 4);
+            //theta += 0.0001;
+          });
+        }
       }
     }
