@@ -6,27 +6,27 @@
     var patterns = [];
     var theta = 0;
 
-    var canvas = document.getElementById('myCanvas');
-    var context = canvas.getContext('2d');
-    var w = window.innerWidth / 2;
-    var h = window.innerHeight;
+     // var canvas = document.getElementById('myCanvas');
+     // var context = canvas.getContext('2d');
+     // var w = window.innerWidth / 2;
+     // var h = window.innerHeight;
 
-    function drawGrid() {
-      for (var x = 20; x < w; x += 20) {
-        context.beginPath();
-        context.moveTo(x, 0);
-        context.lineTo(x, h);
-        context.strokeStyle = '#ddd';
-        context.stroke();
-      }
-      for (var y = 20; y < h; y += 20) {
-        context.beginPath();
-        context.moveTo(0, y);
-        context.lineTo(w, y);
-        context.strokeStyle = '#ddd';
-        context.stroke();
-      }
-    }
+     // function drawGrid() {
+     //   for (var x = 20; x < w; x += 20) {
+     //     context.beginPath();
+     //     context.moveTo(x, 0);
+     //     context.lineTo(x, h);
+     //     context.strokeStyle = '#ddd';
+     //     context.stroke();
+     //   }
+     //   for (var y = 20; y < h; y += 20) {
+     //     context.beginPath();
+     //     context.moveTo(0, y);
+     //     context.lineTo(w, y);
+     //     context.strokeStyle = '#ddd';
+     //     context.stroke();
+     //   }
+     // }
 
     function curvyLine() {
       this.path = new Path();
@@ -60,6 +60,18 @@
       patterns.push(c);
     }
 
+    function patternCreator(arr) {
+      this.i = 0;
+      this.arr = arr;
+    }
+
+    patternCreator.prototype = {
+      generate: function () {
+        this.i++;
+        return this.arr[i];
+      }
+    };
+
     function loop(fn, rate) {
       setTimeout(function () {
         requestAnimationFrame(function () {
@@ -71,9 +83,10 @@
 
     loop(function () {
       if (patterns.length > 1) {
+        theta += 0.01;
         patterns[1].path.segments.forEach(function (s) {
           s.point.y = Math.sin(theta) * 200 + 200;
-          theta += 0.01;
+          //theta += 0.01;
         });
         console.log(theta);
       }
