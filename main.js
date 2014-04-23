@@ -6,27 +6,27 @@
     var patterns = [];
     var theta = 0;
 
-     // var canvas = document.getElementById('myCanvas');
-     // var context = canvas.getContext('2d');
-     // var w = window.innerWidth / 2;
-     // var h = window.innerHeight;
+    var canvas = document.getElementById('myCanvas');
+    var context = canvas.getContext('2d');
+    var w = window.innerWidth / 2;
+    var h = window.innerHeight;
 
-     // function drawGrid() {
-     //   for (var x = 20; x < w; x += 20) {
-     //     context.beginPath();
-     //     context.moveTo(x, 0);
-     //     context.lineTo(x, h);
-     //     context.strokeStyle = '#ddd';
-     //     context.stroke();
-     //   }
-     //   for (var y = 20; y < h; y += 20) {
-     //     context.beginPath();
-     //     context.moveTo(0, y);
-     //     context.lineTo(w, y);
-     //     context.strokeStyle = '#ddd';
-     //     context.stroke();
-     //   }
-     // }
+    function drawGrid() {
+      for (var x = 20; x < w; x += 20) {
+        context.beginPath();
+        context.moveTo(x, 0);
+        context.lineTo(x, h);
+        context.strokeStyle = '#ddd';
+        context.stroke();
+      }
+      for (var y = 20; y < h; y += 20) {
+        context.beginPath();
+        context.moveTo(0, y);
+        context.lineTo(w, y);
+        context.strokeStyle = '#ddd';
+        context.stroke();
+      }
+    }
 
     function curvyLine() {
       this.path = new Path();
@@ -66,43 +66,35 @@
     }
 
     patternCreator.prototype = {
+      normalize: function (maxX, minX, maxY, minY) {
+
+      },
       generate: function () {
         this.i++;
-        return this.arr[i];
+        if (this.i > this.arr.length) {
+          this.i = 0;
+        }
+        return this.arr[this.i];
+      },
+      value: function (time) {
+        this.i = time;
       }
     };
 
-    function loop(fn, rate) {
-      setTimeout(function () {
-        requestAnimationFrame(function () {
-          loop(fn, rate);
-        });
-        fn();
-      }, 1000 / rate);
-    }
+    var a;
 
-    loop(function () {
+    function onFrame(event) {
+      drawGrid();
+
       if (patterns.length > 1) {
-        theta += 0.01;
+        a = new patternCreator(patterns[0].diff);
         patterns[1].path.segments.forEach(function (s) {
-          s.point.y = Math.sin(theta) * 200 + 200;
-          //theta += 0.01;
+          var result = a.generate();
+          //console.log(result);
+          //console.log(result.point.x, result.point.y);
+          //console.log(result.x);
+          s.point.y += result.y;
+          //theta += 0.0001;
         });
-        console.log(theta);
       }
-    }, 200);
-
-     // function onFrame(event) {
-
-     //   //setTimeout(function () {
-     //   //drawGrid();
-
-     //   if (patterns.length > 1) {
-     //     patterns[1].path.segments.forEach(function (s) {
-     //       s.point.y += Math.sin(theta) * 200;
-     //       theta += 0.01;
-     //     });
-     //   }
-
-     //   //}, 200);
-     // }
+    }
