@@ -72,7 +72,7 @@
       },
       generate: function () {
         this.i++;
-        if (this.i > this.arr.length) {
+        if (this.i > this.arr.length - 1) {
           this.i = 0;
         }
         return this.arr[this.i];
@@ -90,16 +90,14 @@
 
       if (patterns.length > 1) {
         a = new patternCreator(patterns[0].diff);
-        if (counter < patterns[1].path.segments.length) {
-          patterns[1].path.segments.forEach(function (s) {
-            var result = a.generate();
-            counter++;
-            //console.log(result);
-            //console.log(result.point.x, result.point.y);
-            //console.log(result.x);
-            s.point.y += (result.y - 4);
-            //theta += 0.0001;
-          });
-        }
+        //if (counter < patterns[1].path.segments.length) {
+        patterns[1].path.segments.forEach(function (s) {
+          var result = a.generate();
+          console.log(result);
+          counter++;
+          s.point.y += (result.y + 4) * 60;
+          //theta += 0.0001;
+        });
+        //}
       }
     }
