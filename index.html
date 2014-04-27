@@ -3,6 +3,7 @@
   <head>
    <meta charset="UTF-8">
     <title>Ridiculous Programming</title>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
     <script type="text/javascript" charset="utf-8" src ="http://cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js"></script>
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/paper.js/0.9.12/paper.js"></script>
     <style type="text/css">
@@ -12,18 +13,24 @@
         top:0;
         left:0;
       }
-      #editor {
-        position: absolute;
-        right:0;
-        width: 50%;
-        height: 100%;
-      }
       #myCanvas{
         position: absolute;
-        left:0;
-        width: 50%;
+        right: 0;
+        width: 60%;
         height: 100%;
-        border: black solid 1px;
+      }
+      #editor {
+        position: absolute;
+        left: 0;
+        width: 40%;
+        height: 60%;
+      }
+      #myCanvas1{
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 40%;
+        height: 40%;
       }
     </style>
   </head>
@@ -31,11 +38,30 @@
     <div id="editor">
     </div>
     <canvas id="myCanvas"></canvas>
+    <canvas id="myCanvas1"></canvas>
   </body>
   <script type="text/javascript" charset="utf-8">
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
     editor.getSession().setMode("ace/mode/javascript");
   </script>
+  <!--<script type="text/paperscript" src="class.js" canvas="myCanvas"></script>-->
   <script type="text/paperscript" src="main.js" canvas="myCanvas"></script>
+  <script type="text/paperscript" src="thumbnail.js" canvas="myCanvas1"></script>
+  <script type="text/javascript">
+    $("#myCanvas").hover(
+      function () {
+        $(this).css('cursor', 'crosshair');
+      }, function () {
+        $(this).css('cursor', 'default');
+      }
+    );
+    $("#myCanvas1").hover(
+      function () {
+        $(this).css('cursor', 'pointer');
+      }, function () {
+        $(this).css('cursor', 'default');
+      }
+    );
+  </script>
 </html>
