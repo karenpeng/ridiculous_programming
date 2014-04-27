@@ -8,32 +8,6 @@
   tool.minDistance = 4;
   tool.maxDistance = 50;
 
-  var nickNames = [
-    'Sunset',
-    'Peewee',
-    'Skeeter',
-    'Limberleg',
-    'Two - Bits',
-    'Hunky - Dory',
-    'Hoot Owl',
-    'Tumbleweed',
-    'Swayback',
-    'Wild - Cat',
-    'Bean - Belly',
-    'Never Sweat',
-    'Iron Jaw',
-    'Rockin - Chair',
-    'Razorback',
-    'Jack - Rabbit',
-    'Four - Ace',
-    'The Rambler',
-    'Snake Eye',
-    'Gray Wonder',
-    'Puddin’ - Foot',
-    'Bootjack',
-    'Mountain Sprout'
-  ];
-
   function curvyLine() {
     this.path = new Path();
     this.path.strokeColor = 'black';
@@ -98,23 +72,23 @@
   var patterns = [];
   var theta = 0;
 
-  function onMouseDown(event) {
+  exports.onMouseDown = function (event) {
     exports.c = new curvyLine();
     exports.c.begin(event.point);
-  }
+  };
 
-  function onMouseDrag(event) {
+  exports.onMouseDrag = function (event) {
     exports.c.middle(event.delta, event.point);
-  }
+  };
 
-  function onMouseUp(event) {
+  exports.onMouseUp = function (event) {
     exports.c.end();
     patterns.push(exports.c);
-  }
+  };
   var a;
   var counter = 0;
 
-  function onFrame(event) {
+  exports.onFrame = function (event) {
     drawGrid();
 
     if (patterns.length > 1) {
@@ -129,6 +103,6 @@
         });
       }
     }
-  }
+  };
   //exports.c = c;
 })(this);
