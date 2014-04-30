@@ -16,29 +16,23 @@
     }, 1000 / rate);
   }
 
-  loop(function () {
+  $("#myCanvas").mouseup(function () {
     for (var i = 0; i < curvyLines.length; i++) {
-      patterns[i] = curvyLines[i];
+      patterns[i] = new curvyLine().copyFrom(curvyLines[i]);
     }
+  });
 
+  loop(function () {
     if (patterns) {
       patterns.forEach(function (p) {
-        if (!p.shrink) {
-          p.path.forEach(function (item) {
-            item[0] *= 0.2;
-            item[1] *= 0.2;
-          });
-          p.diff.forEach(function (item) {
-            item[0] *= 0.2;
-            item[1] *= 0.2;
-          });
-          p.shrink = true;
-        }
+        p.shrink();
       });
     }
     patterns.forEach(function (cc) {
       cc.render(context1);
     });
   }, 10);
+
+  exports.patterns = patterns;
 
 })(this);

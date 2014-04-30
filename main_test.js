@@ -12,7 +12,7 @@
     this.diff = [];
     this.preX;
     this.preY;
-    this.shrink = false;
+    this.shrinkDone = 0;
   }
   curvyLine.prototype = {
     begin: function (x1, y1) {
@@ -38,6 +38,53 @@
         ctx.lineTo(this.path[i + 1][0], this.path[i + 1][1]);
       }
       ctx.stroke();
+    },
+    shrink: function () {
+      if (!this.shrinkDone) {
+        this.path.forEach(function (item) {
+          item[0] *= 0.2;
+          item[1] *= 0.2;
+        });
+        this.diff.forEach(function (item) {
+          item[0] *= 0.2;
+          item[1] *= 0.2;
+        });
+        this.shrinkDone = 1;
+      }
+    },
+    amplify: function () {
+      if (this.shrink) {
+        this.path.forEach(function (item) {
+          item[0] /= 0.2;
+          item[1] /= 0.2;
+        });
+        this.diff.forEach(function (item) {
+          item[0] /= 0.2;
+          item[1] /= 0.2;
+        });
+        this.shrink = 0;
+      }
+    },
+    copyFrom: function (obj) {
+      var i = 0;
+      var that = this;
+      obj.path.forEach(function (item) {
+        that.path[i] = [item[0], item[1]];
+        i++;
+      });
+      var j = 0;
+      obj.diff.forEach(function (item) {
+        that.diff[j] = [item[0], item[1]];
+        j++;
+      });
+      // this.path = obj.path.slice(0);
+      // this.diff = obj.diff.slice(0);
+      this.preX = obj.preX;
+      this.preY = obj.preY;
+      this.shrinkDone = obj.shrinkDone;
+      this.shrink = obj.shrink;
+      this.amplify = obj.amplify;
+      return this;
     }
   };
 
@@ -94,7 +141,9 @@
 
   var c;
   var curvyLines = [];
+  var animateLines = [];
   var down = 0;
+  var run = 0;
 
   $("#myCanvas").mousedown(function (e) {
     c = new curvyLine();
@@ -114,21 +163,37 @@
     down = 0;
   });
 
+  var code;
+  $("#run").click(function () {
+    eval(code);
+    run = 1;
+  });
+
   draw(function () {
+    code = editor.getSession().getValue();
+
     drawBg();
     drawGrid();
-    if (c) {
-      c.render(context);
-    }
-    curvyLines.forEach(function (cc) {
-      if (!cc.shrink) {
-        cc.render(context);
+    if (!run) {
+      if (c) {
+        c.render(context);
       }
-    });
+      curvyLines.forEach(function (cc) {
+        cc.render(context);
+      });
+    } else {
+      curvyLines = [];
+      for (var i = 0; i < patterns.length; i++) {
+        animateLines[i] = new curvyLine().copyFrom(patterns[i]);
+      }
+      animateLines.forEach(function (an) {
+        an.amplify();
+      });
+    }
 
   }, 10);
 
-  //exports.curvyLine = curvyLine;
+  exports.curvyLine = curvyLine;
   exports.curvyLines = curvyLines;
 
 })(this);

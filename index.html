@@ -32,22 +32,37 @@
         width: 40%;
         height: 40%;
       }
+      #run{
+        position: absolute;
+        z-index: 2;
+        bottom: 36%;
+        left: 0;
+        background-color: green;
+        color: white;
+      }
     </style>
   </head>
   <body>
-    <div id="editor">
-    </div>
+    <div id="editor"></div>
     <canvas id="myCanvas"></canvas>
     <canvas id="myCanvas1"></canvas>
+    <button id="run">run</button>
   </body>
   <script type="text/javascript" charset="utf-8">
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
     editor.getSession().setMode("ace/mode/javascript");
+    editor.getSession().setUseSoftTabs(true);
+    //editor.setValue("//patterns[0].path.forEach(function(item){
+    //item[1] = 200;})");
   </script>
   <!--<script type="text/paperscript" src="class.js" canvas="myCanvas"></script>-->
   <!--<script type="text/paperscript" src="main.js" canvas="myCanvas"></script>
   <script type="text/paperscript" src="thumbnail.js" canvas="myCanvas1"></script>-->
+  <script type="text/javascript" src="/lib/jqconsole.js"></script>
+  <script type="text/javascript" src="/lib/peg.js"></script>
+  <script type="text/javascript" src="/lib/plt.js"></script>
+  <script type="text/javascript" src="/lib/sugar.js"></script>
   <script type="text/javascript" src="main_test.js" canvas="myCanvas"></script>
   <script type="text/javascript" src="thumbnail_test.js" canvas="myCanvas1"></script>
   <script type="text/javascript">
