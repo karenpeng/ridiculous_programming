@@ -57,23 +57,36 @@
   $("#myCanvas").mouseup(function () {
     lines.push(c);
     var index = ['line', lineNumber];
-    var dicIndex = index.join();
+    var dicIndex = index.join("");
     lookupTable[dicIndex] = lines[lineNumber];
-    //c = null;
+    c = null;
     down = 0;
     lineNumber++;
   });
 
+  var i = 0;
+  var j = 0;
+
   draw(function () {
-    exports.code = editor.getSession().getValue();
+    //exports.code = editor.getSession().getValue();
 
     drawBg();
     drawGrid();
     if (c) {
       c.render(context);
     }
-
-  }, 8);
+    for (var key in lookupTable) {
+      var item = lookupTable[key];
+      //var item = lookupTable.key;
+      if (item instanceof circle) {
+        item.draw(context, i, j);
+        i++;
+        j++;
+        if (i >= item.position.length) i = 0;
+        if (j >= item.size.length) j = 0;
+      }
+    }
+  }, 12);
 
   exports.lines = lines;
 

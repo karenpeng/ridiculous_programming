@@ -18,6 +18,8 @@
         right: 0;
         width: 60%;
         height: 100%;
+        border: #cde solid 1px;
+        z-index: 2;
       }
       #editor {
         position: absolute;
@@ -32,6 +34,7 @@
         left: 0;
         width: 40%;
         height: 40%;
+        border-top: #ccc solid 1px;
       }
       #run{
         position: absolute;
@@ -50,23 +53,21 @@
     </style>
   </head>
   <body>
-    <div id="editor"></div>
+    <!--<div id="editor"></div>-->
     <canvas id="myCanvas"></canvas>
     <canvas id="myCanvas1"></canvas>
-    <button id="run">run</button>
-    <div id="result">
-      <code>c circle</code>
-      <code>c line0 y size</code>
-      <code>c line0 pos pos</code>
-      <code id="myCode"></code>
-    </div>
+    <!--<button id="run">run</button>-->
+    <!--<code>c circle</code>
+    <code>c line0 y size</code>
+    <code>c line0 pos pos</code>-->
+    <code id="myCode">1 2 +</code>
  </body>
-  <script type="text/javascript" charset="utf-8">
+  <!--<script type="text/javascript" charset="utf-8">
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
     //editor.getSession().setMode("ace/mode/javascript");
     editor.getSession().setUseSoftTabs(true);
-  </script>
+  </script>-->
   <!--<script type="text/paperscript" src="class.js" canvas="myCanvas"></script>-->
   <!--<script type="text/paperscript" src="main.js" canvas="myCanvas"></script>
   <script type="text/paperscript" src="thumbnail.js" canvas="myCanvas1"></script>-->

@@ -84,7 +84,7 @@
      if (arr1 === undefined && arr2 === undefined) {
        this.size = [20];
        this.position = [
-         [200, 200]
+         [350, 300]
        ];
      } else if (arr1 === undefined && arr2[0][0] !== undefined) {
        this.size = [20];
@@ -93,7 +93,7 @@
        undefined) {
        this.size = arr1;
        this.position = [
-         [200, 200]
+         [350, 300]
        ];
      } else if (arr1[0] !== undefined && arr2[0][0] !== undefined) {
        this.size = arr1;
@@ -101,32 +101,16 @@
      }
    }
    circle.prototype = {
-     draw: function (ctx) {
+     draw: function (ctx, i, j) {
        ctx.beginPath();
-       for (var i = 0; i < this.position.length; i++) {
-         for (var j = 0; j < this.size.length; j++) {
-           ctx.arc(this.position[i][0], this.position[i][1], this.size[j], 0,
-             2 *
-             Math
-             .PI);
-           if (j === this.size.length - 1) {
-             j = 0;
-           }
-         }
-         if (i === this.position.length - 1) {
-           i = 0;
-         }
-       }
+       ctx.arc(this.position[i][0], this.position[i][1], this.size[j], 0,
+         2 * Math.PI);
+       ctx.strokeStyle = '#000';
        ctx.stroke();
      }
    };
 
-   function pos() {
-
-   }
-
    exports.curvyLine = curvyLine;
    exports.circle = circle;
-   exports.pos = pos;
 
  })(this);

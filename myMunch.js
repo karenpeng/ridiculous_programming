@@ -1,9 +1,6 @@
  var lookupTable = new Object();
  var stack;
- // uncomment next line to enable refresh
- //PLT.refresh = true
 
- // write helper functions and semantics here
  var Munch = {
    dictionary: {
 
@@ -48,15 +45,22 @@
      'position': function (stack) {
        var obj = stack.pop();
        if (obj instanceof curvyLine) {
-         var objPos = new pos();
+         var objPos = [];
          for (var i = 0; i < obj.path.length; i++) {
            objPos.push(obj.path[i]);
          }
          stack.push(objPos);
-       } else if (obj instanceof pos) {
+       } else if (obj[0][0] !== undefined) {
          var whom = stack.pop();
          whom.position = obj;
        }
+       return stack;
+     },
+
+     'size': function (stack) {
+       var arr = stack.pop();
+       var obj = stack.pop();
+       obj.size = arr;
        return stack;
      },
 
@@ -80,7 +84,32 @@
      '+': function (stack) {
        var a = stack.pop();
        var b = stack.pop();
-       stack.push(a + b);
+       if (typeof a === 'number' && typeof b === 'number') {
+         stack.push(a + b);
+       } else if (typeof a === 'number' && typeof b === 'object') {
+         var newB = [];
+         for (var i = 0; i < b.length; i++) {
+           newB.push([b[i][0] + a, b[i][1] + a]);
+         }
+         stack.push(newB);
+
+       } else if (typeof a === 'object' && typeof b === 'number') {
+         var newA = [];
+         for (var j = 0; j < a.length; j++) {
+           newA.push([a[j][0] + b, a[j][1] + b]);
+         }
+         stack.push(newA);
+
+       } else if (typeof a === 'object' && typeof b === 'object') {
+         var max = Math.max(a.length, b.length);
+         var newArr = [];
+         for (var k = 0; k < max; k++) {
+           if (a[k] === undefined) a[k] = [0, 0];
+           if (b[k] === undefined) b[k] = [0, 0];
+           newArr.push([a[k][0] + b[k][0], a[k][1] + b[k][1]]);
+         }
+         stack.push(newArr);
+       }
        return stack;
      },
 
