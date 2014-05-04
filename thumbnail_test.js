@@ -6,32 +6,14 @@
   var h = window.innerHeight * 2 / 5;
   $("#myCanvas1").attr('width', w);
   $("#myCanvas1").attr('height', h);
-
-  function loop(foo, rate) {
-    setTimeout(function () {
-      requestAnimationFrame(function () {
-        loop(foo, rate);
-      });
-      foo();
-    }, 1000 / rate);
-  }
+  var lineNumber = 0;
 
   $("#myCanvas").mouseup(function () {
-    for (var i = 0; i < curvyLines.length; i++) {
-      patterns[i] = new curvyLine().copyFrom(curvyLines[i]);
-    }
+    patterns[lineNumber] = new curvyLine().copyFrom(lines[lineNumber]);
+    patterns[lineNumber].shrink();
+    patterns[lineNumber].render(context1);
+    lineNumber++;
   });
-
-  loop(function () {
-    if (patterns) {
-      patterns.forEach(function (p) {
-        p.shrink();
-      });
-    }
-    patterns.forEach(function (cc) {
-      cc.render(context1);
-    });
-  }, 10);
 
   exports.patterns = patterns;
 

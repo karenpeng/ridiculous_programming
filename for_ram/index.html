@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+   <meta charset="UTF-8">
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src ="http://cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js"></script>
+    <style type="text/css">
+      html, body{
+        margin: 0;
+        padding: 0;
+        top:0;
+        left:0;
+        margin-top: -10px;
+      }
+      #editor {
+        position: absolute;
+        left: 0;
+        width: 40%;
+        height: 60%;
+      }
+      #run{
+        position: absolute;
+        z-index: 2;
+        top: 60%;
+        left: 0;
+        background-color: green;
+        color: white;
+      }
+      #myCode{
+        position: absolute;
+        bottom: 0;
+        left: 40%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="editor"></div>
+    <button id="run">run</button>
+    <code id="myCode">xxx</code>
+ </body>
+  <script type="text/javascript" src="lib/jqconsole.js"></script>
+  <script type="text/javascript" src="lib/peg.js"></script>
+  <script type="text/javascript" src="lib/plt.js"></script>
+  <script type="text/javascript" src="lib/sugar.js"></script>
+  <script type="text/javascript" charset="utf-8">
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.getSession().setMode("ace/mode/javascript");
+    editor.getSession().setUseSoftTabs(true);
+  </script>
+
+<script type="text/javascript">
+  // uncomment next line to enable refresh
+   //PLT.refresh = true
+
+  // write helper functions and semantics here
+  var Munch = {
+    dictionary: {
+      /*
+      defines a new word
+
+      def expects two items on the stack
+      the first item is the name of the word as a string
+      second item is the value of the word
+
+      examples
+
+      2014 "year" def year            -> [2014]
+      2014 "year" def year year year  -> [2014, 2014, 2014]
+      2014 "year" def year 1000 +     -> [3014]
+      */
+      'def': function(stack) {
+        var name = stack.pop();
+        var value = stack.pop();
+
+        Munch.dictionary[name] = value;
+        return stack;
+      },
+
+      /*
+      conditionally excutes a quotation
+
+      if expects two items on the stack
+      the first item is the quotation to conditionally execute
+      the second item is a number. if that number is zero, the quotation is not
+      executed. otherwise, it is.
+
+      examples
+
+      0 ["hello"] if -> []
+      1 ["hello"] if -> ["hello"]
+      10 20 0 [+] if -> [10, 20]
+      10 20 1 [+] if -> [30]
+      */
+      'if': function(stack) {
+        var quot = stack.pop();
+        var num = stack.pop();
+        if(num != 0) {
+          // if the number is not zero, evaluate the quotation given the current stack
+          stack = Munch.eval(quot, stack);
+        }
+
+        return stack;
+      },
+
+      /*
+      adds two numbers
+
+      + expects two items on the stack
+      it pops them both, adds, them, then pushes the result on the stack
+
+      examples
+
+      4 5 + -> [9]
+      10 4 5 + + -> [19]
+      */
+      '+': function(stack) {
+        var a = stack.pop();
+        var b = stack.pop();
+        stack.push(a + b);
+
+        return stack;
+      },
+
+      '-': function(stack) {
+        var a = stack.pop();
+        var b = stack.pop();
+        stack.push(a - b);
+
+        return stack;
+      },
+
+      '*': function(stack) {
+        var a = stack.pop();
+        var b = stack.pop();
+        stack.push(a * b);
+
+        return stack;
+      },
+
+      '/': function(stack) {
+        var a = stack.pop();
+        var b = stack.pop();
+        stack.push(a / b);
+
+        return stack;
+      },
+
+      '÷': function(stack) {
+        var a = stack.pop();
+        var b = stack.pop();
+        stack.push(a / b);
+        return stack;
+      },
+
+      ' "pi" ': function(stack) {
+        //stack.pop();
+        stack.push(Math.PI);
+        return stack;
+      },
+
+      'dup': function(stack){
+        var a = stack.pop();
+        stack.push (a);
+        stack.push (a);
+        return stack;
+      },
+
+      'swap':function(stack){
+        var a = stack.pop();
+        var b = stack.pop();
+        stack.push(a);
+        stack.push(b);
+        return stack;
+      },
+
+      'rollup':function(stack){
+        var a = stack.pop();
+        var b = stack.pop();
+        var c = stack.pop();
+        var d = Math.max(a, b, c);
+        var e = Math.min(a, b, c);
+        stack.push(d);
+        var arr = [a,b,c];
+        for(var i = 0; i < 3; i++){
+          if(arr[i]!==d && arr[i]!==e){
+            var f = arr[i];
+          }
+        }
+        stack.push(f);
+        stack.push(e);
+        return stack;
+      },
+
+      'rolldown':function(stack){
+        var a = stack.pop();
+        var b = stack.pop();
+        var c = stack.pop();
+        var d = Math.max(a, b, c);
+        var e = Math.min(a, b, c);
+        stack.push(e);
+        var arr = [a,b,c];
+        for(var i = 0; i < 3; i++){
+          if(arr[i]!==d && arr[i]!==e){
+            var f = arr[i];
+          }
+        }
+        stack.push(f);
+        stack.push(d);
+        return stack;
+      },
+
+      '>':function(stack){
+        var a = stack.pop();
+        var b = stack.pop();
+        if(b > a){
+          stack.push(true);
+        }else{
+          stack.push(false);
+        }
+        return stack;
+      },
+
+      '<':function(stack){
+        var a = stack.pop();
+        var b = stack.pop();
+        if(b < a){
+          stack.push(true);
+        }else{
+          stack.push(false);
+        }
+        return stack;
+      },
+
+      '=':function(stack){
+        var a = stack.pop();
+        var b = stack.pop();
+        if(b === a){
+          stack.push(true);
+        }else{
+          stack.push(false);
+        }
+        return stack;
+      },
+
+      'random':function(stack){
+        stack.push(Math.random());
+        return stack;
+      },
+
+      'times': function(stack) {
+        var num = stack.pop();
+        var quot = stack.pop();
+        for(var i = num; i > 0; i--) {
+          stack = Munch.eval(quot, stack);
+        }
+        return stack;
+      },
+
+      'maybe':function(stack){
+        var quot = stack.pop();
+        if( Math.random() > 0.5 ){
+          stack = Munch.eval(quot, stack);
+        }
+        return stack;
+      },
+
+      'true':function(stack){
+        stack.push(true);
+        return stack;
+      },
+
+      'false':function(stack){
+        stack.push(false);
+        return stack;
+      }
+    },
+
+    eval: function(source, initialStack) {
+      // the stack we are operating on
+      var stack;
+      if(initialStack != undefined)
+        // if an initial stack is provided, use that
+        stack = initialStack;
+      else
+        // otherwise, use an empty array
+        stack = [];
+
+      // loop through every item in the source
+      for (var i = 0; i < source.length; i++) {
+        if( source[i].word != undefined ) {
+          // if the item is a word, look it up in the dictionary
+          var wordValue = Munch.dictionary[source[i].word];
+          if( typeof wordValue == "function" ) {
+            // if the word's value is a function execute it with the current stack as an argument
+            // make current stack into the result
+            stack = wordValue(stack.clone());
+
+          } else if( typeof wordValue == "object" ) {
+            // if the word's value is a quotation, execute it on the current stack
+             for(var j = 0; j < wordValue.length; j++){
+               var a = Munch.dictionary[wordValue[j].word];
+               stack = a(stack.clone());
+             }
+
+          } else if( wordValue == undefined ) {
+            // if the word's value was not found, throw an error
+            throw new Error("Unknown word '" + source[i].word + "'!");
+
+          } else {
+            // else, we know the word's value is not a function or undefined, push it to the stack
+            stack.push(wordValue);
+          }
+
+        } else {
+          // else, we know that the item is not a word, push it to the stack
+          stack.push(source[i]);
+
+        }
+      }
+
+      // return the stack we operated on
+      return stack;
+    }
+  }
+</script>
+<!--
+
+PEG syntax quick reference
+
+'x'   : match the literal character 'x'
+x+    : match x 1 or more times
+x*    : match x 0 or more times
+x?    : match x 0 or 1 times
+!x    : match anything but the match x
+x/y   : match x or y, trying in that order
+[xyz] : match one of the literal character 'x', 'y', or 'z'
+v:x   : assign the result of the match x to the variable v
+
+Full documentation: http://pegjs.majda.cz/documentation#grammar-syntax-and-semantics-parsing-expression-types
+
+-->
+
+<grammar>
+  start       = p:literal+ { return Munch.eval(p) }
+
+  literal     = number / string / quotation / word
+
+  word        = w:[^\[\] ]+ space { return { word:w.join('') } }
+
+  quotation   = '[' q:literal+ ']' space { return q }
+
+  string      = '"' s:[^"]* '"' space { return s.join('') }
+
+  number      = float / integer
+  float       = s:'-'? n:(digit* '.' digit+) space { return parseFloat(s + n.flatten().join('')) }
+  integer     = s:'-'? d:digit+ space { return parseInt(s + d.join('')) }
+
+  digit       = [0123456789]
+
+  space       = ' '*
+  SPACE       = ' '+ / !.
+</grammar>
+
+<script type="text/javascript">
+  $("#run").click(function(){
+    var code = editor.getSession().getValue();
+    $("#myCode").html(code);
+    var result = Munch.eval($("#myCode").contents());
+    $("#myCode").html(result);
+    console.log(result);
+  });
+</script>
+
+</html>

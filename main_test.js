@@ -22,7 +22,6 @@
     },
     middle: function (x1, y1) {
       this.path.push([x1, y1]);
-
       var x_ = x1 - this.preX;
       var y_ = y1 - this.preY;
       this.diff.push([x_, y_]);
@@ -163,14 +162,10 @@
     down = 0;
   });
 
-  var code;
-  $("#run").click(function () {
-    eval(code);
-    run = 1;
-  });
+  exports.code;
 
   draw(function () {
-    code = editor.getSession().getValue();
+    exports.code = editor.getSession().getValue();
 
     drawBg();
     drawGrid();
@@ -179,7 +174,7 @@
         c.render(context);
       }
       curvyLines.forEach(function (cc) {
-        cc.render(context);
+        //cc.render(context);
       });
     } else {
       curvyLines = [];
