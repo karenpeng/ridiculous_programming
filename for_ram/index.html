@@ -78,7 +78,6 @@
         var a = stack.pop();
         var b = stack.pop();
         stack.push(a + b);
-
         return stack;
       },
 
@@ -348,63 +347,11 @@ Full documentation: http://pegjs.majda.cz/documentation#grammar-syntax-and-seman
         bottom: 0;
         left: 40%;
       }
-      #chuck{
-        position: absolute;
-        z-index: 4;
-        top: 60%;
-      }
     </style>
   </head>
   <body>
     <div id="editor"></div>
     <button id="run">run</button>
-
-<div id="chuck">
-  <h3>Literals</h3>
-<code>45</code>
-<code>20.9</code>
-<code>.990</code>
-<code>-89</code>
-<code>-89.5</code>
-<code>-.5</code>
-<code>"hello world"</code>
-<code>[1,2,3,4,5,6]</code>
-
-<h3>Words</h3>
-<code>3.141592653589793 "pi" def</code>
-<code>3.14 "pi" def</code>
-<code>1 2 +</code>
-
-<h3>Quotations</h3>
-<code>[1 2 3 4 5]</code>
-<code>[dup * ]</code>
-<code>[dup 12 ]</code>
-
-<h3>Homework - Words - Literals</h3>
-<p>We talked about <em>true</em> and <em>false</em> being literals, but you can and should implement them as words</p>
-<code>true</code>
-<code>false</code>
-<code>true true false true</code>
-
-<h3>Homework - Words - Arithmetic</h3>
-<p>Implement other arithmetic words</p>
-<code>13 17 -</code>
-<code>13 17 *</code>
-<code>13 17 /</code>
-<code>13 17 ÷</code>
-
-<h3>Homework - Words - Stack Shuffling</h3>
-<p>This should result in <em>[15, 15]</em></p>
-<code>15 dup</code>
-
-<p>This should result in <em>[17, 13]</em></p>
-<code>13 17 swap</code>
-
-<p>This should result in <em>[2, 3, 1]</em></p>
-<code>1 2 3 rollup</code>
-
-<p>This should result in <em>[3, 1, 2]</em></p>
-<code>1 2 3 rolldown</code>
 
 <h3>Homework - Words - Comparison</h3>
 <code>5 6 ></code>
@@ -429,10 +376,10 @@ Full documentation: http://pegjs.majda.cz/documentation#grammar-syntax-and-seman
 <p>Implement a word that executes a quotation 50% of the time</p>
 <code>["hello world"] maybe</code>
 <code>[["hello world"] maybe] 10 times</code>
+<code id="myCode">1 2 +</code>
 
 <h3>Homework - Extra - Do something with the snowman</h3>
 <code>☃</code>
-</div>
  </body>
 
   <script type="text/javascript" charset="utf-8">
@@ -445,9 +392,9 @@ Full documentation: http://pegjs.majda.cz/documentation#grammar-syntax-and-seman
   $("#run").click(function(){
     var code = editor.getSession().getValue();
     $("#myCode").html(code);
-    //var result = Munch.eval($("#myCode").contents());
-    //$("#myCode").html(result);
-    //console.log(result);
+    var result = Munch.eval($("#myCode").html(code));
+    $("#myCode").html(code + result);
+    console.log(result);
   });
 </script>
 
