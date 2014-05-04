@@ -4,54 +4,14 @@
    <meta charset="UTF-8">
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
     <script type="text/javascript" charset="utf-8" src ="http://cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js"></script>
-    <style type="text/css">
-      html, body{
-        margin: 0;
-        padding: 0;
-        top:0;
-        left:0;
-        margin-top: -10px;
-      }
-      #editor {
-        position: absolute;
-        left: 0;
-        width: 40%;
-        height: 60%;
-      }
-      #run{
-        position: absolute;
-        z-index: 2;
-        top: 60%;
-        left: 0;
-        background-color: green;
-        color: white;
-      }
-      #myCode{
-        position: absolute;
-        bottom: 0;
-        left: 40%;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="editor"></div>
-    <button id="run">run</button>
-    <code id="myCode">xxx</code>
- </body>
-  <script type="text/javascript" src="lib/jqconsole.js"></script>
-  <script type="text/javascript" src="lib/peg.js"></script>
-  <script type="text/javascript" src="lib/plt.js"></script>
-  <script type="text/javascript" src="lib/sugar.js"></script>
-  <script type="text/javascript" charset="utf-8">
-    var editor = ace.edit("editor");
-    editor.setTheme("ace/theme/monokai");
-    editor.getSession().setMode("ace/mode/javascript");
-    editor.getSession().setUseSoftTabs(true);
-  </script>
-
-<script type="text/javascript">
+    <script type="text/javascript" src="lib/jquery.js"></script>
+    <script type="text/javascript" src="lib/jqconsole.js"></script>
+    <script type="text/javascript" src="lib/peg.js"></script>
+    <script type="text/javascript" src="lib/plt.js"></script>
+    <script type="text/javascript" src="lib/sugar.js"></script>
+    <script type="text/javascript">
   // uncomment next line to enable refresh
-   //PLT.refresh = true
+  //PLT.refresh = true
 
   // write helper functions and semantics here
   var Munch = {
@@ -361,14 +321,133 @@ Full documentation: http://pegjs.majda.cz/documentation#grammar-syntax-and-seman
   space       = ' '*
   SPACE       = ' '+ / !.
 </grammar>
+    <style type="text/css">
+      html, body{
+        margin: 0;
+        padding: 0;
+        top:0;
+        left:0;
+        margin-top: -10px;
+      }
+      #editor {
+        position: absolute;
+        left: 0;
+        width: 40%;
+        height: 60%;
+      }
+      #run{
+        position: absolute;
+        z-index: 2;
+        top: 60%;
+        left: 0;
+        background-color: green;
+        color: white;
+      }
+      #myCode{
+        position: absolute;
+        bottom: 0;
+        left: 40%;
+      }
+      #chuck{
+        position: absolute;
+        z-index: 4;
+        top: 60%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="editor"></div>
+    <button id="run">run</button>
 
+<div id="chuck">
+  <h3>Literals</h3>
+<code>45</code>
+<code>20.9</code>
+<code>.990</code>
+<code>-89</code>
+<code>-89.5</code>
+<code>-.5</code>
+<code>"hello world"</code>
+<code>[1,2,3,4,5,6]</code>
+
+<h3>Words</h3>
+<code>3.141592653589793 "pi" def</code>
+<code>3.14 "pi" def</code>
+<code>1 2 +</code>
+
+<h3>Quotations</h3>
+<code>[1 2 3 4 5]</code>
+<code>[dup * ]</code>
+<code>[dup 12 ]</code>
+
+<h3>Homework - Words - Literals</h3>
+<p>We talked about <em>true</em> and <em>false</em> being literals, but you can and should implement them as words</p>
+<code>true</code>
+<code>false</code>
+<code>true true false true</code>
+
+<h3>Homework - Words - Arithmetic</h3>
+<p>Implement other arithmetic words</p>
+<code>13 17 -</code>
+<code>13 17 *</code>
+<code>13 17 /</code>
+<code>13 17 ÷</code>
+
+<h3>Homework - Words - Stack Shuffling</h3>
+<p>This should result in <em>[15, 15]</em></p>
+<code>15 dup</code>
+
+<p>This should result in <em>[17, 13]</em></p>
+<code>13 17 swap</code>
+
+<p>This should result in <em>[2, 3, 1]</em></p>
+<code>1 2 3 rollup</code>
+
+<p>This should result in <em>[3, 1, 2]</em></p>
+<code>1 2 3 rolldown</code>
+
+<h3>Homework - Words - Comparison</h3>
+<code>5 6 ></code>
+<code>5 6 =</code>
+<code>5 6 <</code>
+<h3>Homework - Words - Random</h3>
+<p>Implement a word that pushes a random number between 0 and 1 to the stack</p>
+<code>random</code>
+<code>random 10 *</code>
+
+<h3>Homework - Loops</h3>
+<p>Use the ideas from <em>if</em> to implement loops
+<code>1 2 3 4 5 6 7 8 [+] 5 times</code>
+<code>["hello" "world"] 5 times</code>
+
+<h3>Homework - Function Definitions</h3>
+<p>Use the ideas from <em>def</em> and <em>if</em> to implement function definitions</p>
+<p>This should return <em>[144]</em></p>
+<code>[dup *] "square" def 12 square</code>
+
+<h3>Homework - Extra - Maybe</h3>
+<p>Implement a word that executes a quotation 50% of the time</p>
+<code>["hello world"] maybe</code>
+<code>[["hello world"] maybe] 10 times</code>
+
+<h3>Homework - Extra - Do something with the snowman</h3>
+<code>☃</code>
+</div>
+ </body>
+
+  <script type="text/javascript" charset="utf-8">
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.getSession().setMode("ace/mode/javascript");
+    editor.getSession().setUseSoftTabs(true);
+  </script>
 <script type="text/javascript">
   $("#run").click(function(){
     var code = editor.getSession().getValue();
     $("#myCode").html(code);
-    var result = Munch.eval($("#myCode").contents());
-    $("#myCode").html(result);
-    console.log(result);
+    //var result = Munch.eval($("#myCode").contents());
+    //$("#myCode").html(result);
+    //console.log(result);
   });
 </script>
 
