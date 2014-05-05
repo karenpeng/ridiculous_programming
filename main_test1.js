@@ -79,11 +79,7 @@
       var item = lookupTable[key];
       //var item = lookupTable.key;
       if (item instanceof circle) {
-        item.draw(context, i, j);
-        i++;
-        j++;
-        if (i >= item.position.length) i = 0;
-        if (j >= item.size.length) j = 0;
+        item.draw(context);
       }
     }
   }, 12);

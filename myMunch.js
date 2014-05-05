@@ -1,5 +1,5 @@
  var lookupTable = new Object();
- var stack;
+ //var stack;
 
  var Munch = {
    dictionary: {
@@ -26,7 +26,7 @@
        var obj = stack.pop();
        var objY = [];
        for (var i = 0; i < obj.path.length; i++) {
-         objY.push(obj.path[i][1]);
+         objY.push([0, obj.path[i][1]]);
        }
        stack.push(objY);
        return stack;
@@ -36,7 +36,7 @@
        var obj = stack.pop();
        var objX = [];
        for (var i = 0; i < obj.path.length; i++) {
-         objX.push(obj.path[i][0]);
+         objX.push([obj.path[i][0], 0]);
        }
        stack.push(objX);
        return stack;
@@ -232,6 +232,7 @@
 
    eval: function (source, initialStack) {
      // the stack we are operating on
+     var stack;
      if (initialStack !== undefined)
      // if an initial stack is provided, use that
        stack = initialStack;
