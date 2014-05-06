@@ -67,7 +67,6 @@
          for (var l = 0; l < obj.manyTimeIhave.length; l++) {
            objTime.push(obj.manyTimeIhave[l]);
          }
-         console.log(objPos3);
          stack.push({
            pos: objPos3,
            time: objTime

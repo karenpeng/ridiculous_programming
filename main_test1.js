@@ -40,16 +40,17 @@
   var c;
   var lines = [];
   var manyLines = new manyLine();
+  var manyLinesHolder = [];
   var manyTime = [];
   var down = 0;
   var lineNumber = 0;
   var manyLineNumber = 0;
-  var shiftDown = false;
+  exports.shiftDown = false;
   var startCountGap = false;
   var countGap = 0;
 
   $("#myCanvas").mousedown(function (e) {
-    if (shiftDown && countGap !== 0) {
+    if (exports.shiftDown && countGap !== 0) {
       startCountGap = false;
       manyLines.manyTimeIhave.push(countGap);
       countGap = 0;
@@ -66,7 +67,7 @@
   });
 
   $("#myCanvas").mouseup(function () {
-    if (!shiftDown) {
+    if (!exports.shiftDown) {
       lines.push(c);
       var index = ['line', lineNumber];
       var dicIndex = index.join("");
@@ -83,7 +84,7 @@
   $(window).keydown(function (e) {
     if (e.which === 18) {
       e.preventDefault();
-      shiftDown = true;
+      exports.shiftDown = true;
     }
   });
 
@@ -98,7 +99,9 @@
         c = null;
         manyLineNumber++;
         manyTime = [];
+        manyLinesHolder.push(manyLines);
         manyLines = null;
+        countGap = 0;
       }
     }
   });
@@ -130,6 +133,8 @@
   }, 18);
 
   exports.lines = lines;
-  exports.shiftDown = shiftDown;
+  exports.manyLines = manyLines;
+  exports.manyLinesHolder = manyLinesHolder;
+  //exports.shiftDown = shiftDown;
 
 })(this);

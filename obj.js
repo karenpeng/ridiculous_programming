@@ -86,6 +86,42 @@
      this.manyLinesIhave = [];
      this.manyTimeIhave = [];
    }
+   manyLine.prototype = {
+     shrink: function () {
+       this.manyLinesIhave.forEach(function (l) {
+         l.forEach(function (p) {
+           p[0] *= 0.2;
+           p[1] *= 0.2;
+         });
+       });
+     },
+     render: function (ctx) {
+       ctx.beginPath();
+       ctx.strokeStyle = '#000';
+       this.manyLinesIhave.forEach(function (l) {
+         for (var i = 0; i < l.length - 2; i++) {
+           ctx.moveTo(l[i][0], l[i][1]);
+           ctx.lineTo(l[i + 1][0], l[i + 1][1]);
+         }
+         ctx.stroke();
+       });
+     },
+     copyFrom: function (obj) {
+       var that = this;
+       var ll = [];
+       obj.manyLinesIhave.forEach(function (cl) {
+         cl.path.forEach(function (p) {
+           ll.push([p[0], p[1]]);
+         });
+         that.manyLinesIhave.push(ll);
+         ll = [];
+       });
+       obj.manyTimeIhave.forEach(function (t) {
+         that.manyTimeIhave.push(t);
+       });
+       return this;
+     }
+   };
 
    function circle(arr1, arr2) {
      if (arr1 === undefined && arr2 === undefined) {
@@ -122,6 +158,7 @@
    }
    circle.prototype = {
      draw: function (ctx) {
+       this.position = this.positions[this.positionNum];
        ctx.beginPath();
        var dia = this.size[this.j][0] + this.size[this.j][1];
        ctx.arc(this.position[this.i][0], this.position[this.i][1], dia, 0,
@@ -139,7 +176,6 @@
        }
      },
      switchArr: function () {
-       this.position = this.positions[this.positionNum];
        if (this.positonDone) {
          if (this.timePass.length === 0) {
            this.i = 0;
@@ -150,10 +186,8 @@
            this.positonDone = false;
            this.positionCounter = 0;
            this.timeNum++;
-           console.log("Y");
          } else {
            this.positionCounter++;
-           console.log("Z");
          }
          if (this.timeNum >= this.timePass.length) this.timeNum = 0;
          if (this.positionNum >= this.positions.length) this.positionNum = 0;
