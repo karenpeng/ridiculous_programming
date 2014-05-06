@@ -49,10 +49,33 @@
          for (var i = 0; i < obj.path.length; i++) {
            objPos.push(obj.path[i]);
          }
-         stack.push(objPos);
-       } else if (obj[0][0] !== undefined) {
+         stack.push({
+           pos: [objPos],
+           time: []
+         });
+       } else if (obj instanceof manyLine) {
+         var objPos2 = [];
+         var objPos3 = [];
+         for (var j = 0; j < obj.manyLinesIhave.length; j++) {
+           for (var k = 0; k < obj.manyLinesIhave[j].path.length; k++) {
+             objPos2.push(obj.manyLinesIhave[j].path[k]);
+           }
+           objPos3.push(objPos2);
+           objPos2 = [];
+         }
+         var objTime = [];
+         for (var l = 0; l < obj.manyTimeIhave.length; l++) {
+           objTime.push(obj.manyTimeIhave[l]);
+         }
+         console.log(objPos3);
+         stack.push({
+           pos: objPos3,
+           time: objTime
+         });
+       } else if (typeof obj === 'object') {
          var whom = stack.pop();
-         whom.position = obj;
+         whom.positions = obj.pos;
+         whom.timePass = obj.time;
        }
        return stack;
      },

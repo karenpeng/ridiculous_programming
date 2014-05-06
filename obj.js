@@ -6,6 +6,8 @@
      this.preX;
      this.preY;
      this.shrinkDone = 0;
+     this.gapOpen = false;
+     this.gapTime = [];
    }
    curvyLine.prototype = {
      begin: function (x1, y1) {
@@ -80,6 +82,11 @@
      }
    };
 
+   function manyLine() {
+     this.manyLinesIhave = [];
+     this.manyTimeIhave = [];
+   }
+
    function circle(arr1, arr2) {
      if (arr1 === undefined && arr2 === undefined) {
        this.size = [
@@ -103,10 +110,15 @@
        this.size = arr1;
        this.position = arr2;
      }
-     // this.i = this.position.length;
-     // this.j = this.size.length;
      this.i = 0;
      this.j = 0;
+     this.positions = [];
+     this.positionNum = 0;
+     this.positionCounter = 0;
+     this.timePass = [];
+     this.timeNum = 0;
+     this.positonDone = false;
+     this.positions.push(this.position);
    }
    circle.prototype = {
      draw: function (ctx) {
@@ -116,14 +128,41 @@
          2 * Math.PI);
        ctx.strokeStyle = '#000';
        ctx.stroke();
-       this.i++;
+       if (this.i < this.position.length - 1) {
+         this.i++;
+       } else {
+         this.positonDone = true;
+       }
        this.j++;
-       if (this.i >= this.position.length) this.i = 0;
-       if (this.j >= this.size.length) this.j = 0;
+       if (this.j >= this.size.length) {
+         this.j = 0;
+       }
+     },
+     switchArr: function () {
+       this.position = this.positions[this.positionNum];
+       if (this.positonDone) {
+         if (this.timePass.length === 0) {
+           this.i = 0;
+           this.positonDone = false;
+         } else if (this.positionCounter === this.timePass[this.timeNum]) {
+           this.positionNum++;
+           this.i = 0;
+           this.positonDone = false;
+           this.positionCounter = 0;
+           this.timeNum++;
+           console.log("Y");
+         } else {
+           this.positionCounter++;
+           console.log("Z");
+         }
+         if (this.timeNum >= this.timePass.length) this.timeNum = 0;
+         if (this.positionNum >= this.positions.length) this.positionNum = 0;
+       }
      }
    };
 
    exports.curvyLine = curvyLine;
+   exports.manyLine = manyLine;
    exports.circle = circle;
 
  })(this);

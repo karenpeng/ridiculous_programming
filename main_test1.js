@@ -39,10 +39,21 @@
 
   var c;
   var lines = [];
+  var manyLines = new manyLine();
+  var manyTime = [];
   var down = 0;
   var lineNumber = 0;
+  var manyLineNumber = 0;
+  var shiftDown = false;
+  var startCountGap = false;
+  var countGap = 0;
 
   $("#myCanvas").mousedown(function (e) {
+    if (shiftDown && countGap !== 0) {
+      startCountGap = false;
+      manyLines.manyTimeIhave.push(countGap);
+      countGap = 0;
+    }
     c = new curvyLine();
     c.begin(e.pageX - editorW, e.pageY);
     down = 1;
@@ -55,17 +66,42 @@
   });
 
   $("#myCanvas").mouseup(function () {
-    lines.push(c);
-    var index = ['line', lineNumber];
-    var dicIndex = index.join("");
-    lookupTable[dicIndex] = lines[lineNumber];
-    c = null;
+    if (!shiftDown) {
+      lines.push(c);
+      var index = ['line', lineNumber];
+      var dicIndex = index.join("");
+      lookupTable[dicIndex] = lines[lineNumber];
+      c = null;
+      lineNumber++;
+    } else {
+      manyLines.manyLinesIhave.push(c);
+      startCountGap = true;
+    }
     down = 0;
-    lineNumber++;
   });
 
-  var i = 0;
-  var j = 0;
+  $(window).keydown(function (e) {
+    if (e.which === 18) {
+      e.preventDefault();
+      shiftDown = true;
+    }
+  });
+
+  $(window).keyup(function (e) {
+    if (e.which === 18) {
+      e.preventDefault();
+      shiftDown = false;
+      if (manyLines.manyLinesIhave.length !== 0) {
+        var index = ['manyLine', manyLineNumber];
+        var dicIndex = index.join("");
+        lookupTable[dicIndex] = manyLines;
+        c = null;
+        manyLineNumber++;
+        manyTime = [];
+        manyLines = null;
+      }
+    }
+  });
 
   draw(function () {
     //exports.code = editor.getSession().getValue();
@@ -79,11 +115,21 @@
       var item = lookupTable[key];
       //var item = lookupTable.key;
       if (item instanceof circle) {
+        item.switchArr();
         item.draw(context);
       }
     }
-  }, 12);
+    if (startCountGap) {
+      countGap++;
+    }
+    if (manyLines) {
+      manyLines.manyLinesIhave.forEach(function (l) {
+        l.render(context);
+      });
+    }
+  }, 18);
 
   exports.lines = lines;
+  exports.shiftDown = shiftDown;
 
 })(this);

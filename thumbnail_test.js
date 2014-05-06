@@ -9,10 +9,12 @@
   var lineNumber = 0;
 
   $("#myCanvas").mouseup(function () {
-    patterns[lineNumber] = new curvyLine().copyFrom(lines[lineNumber]);
-    patterns[lineNumber].shrink();
-    patterns[lineNumber].render(context1);
-    lineNumber++;
+    if (!shiftDown) {
+      // patterns[lineNumber] = new curvyLine().copyFrom(lines[lineNumber]);
+      // patterns[lineNumber].shrink();
+      // patterns[lineNumber].render(context1);
+      // lineNumber++;
+    }
   });
 
   exports.patterns = patterns;
