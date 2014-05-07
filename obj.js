@@ -36,12 +36,12 @@
      shrink: function () {
        if (!this.shrinkDone) {
          this.path.forEach(function (item) {
-           item[0] *= 0.2;
-           item[1] *= 0.2;
+           item[0] *= 0.3;
+           item[1] *= 0.3;
          });
          this.diff.forEach(function (item) {
-           item[0] *= 0.2;
-           item[1] *= 0.2;
+           item[0] *= 0.3;
+           item[1] *= 0.3;
          });
          this.shrinkDone = 1;
        }
@@ -49,12 +49,12 @@
      amplify: function () {
        if (this.shrink) {
          this.path.forEach(function (item) {
-           item[0] /= 0.2;
-           item[1] /= 0.2;
+           item[0] /= 0.3;
+           item[1] /= 0.3;
          });
          this.diff.forEach(function (item) {
-           item[0] /= 0.2;
-           item[1] /= 0.2;
+           item[0] /= 0.3;
+           item[1] /= 0.3;
          });
          this.shrink = 0;
        }
@@ -90,8 +90,8 @@
      shrink: function () {
        this.manyLinesIhave.forEach(function (l) {
          l.forEach(function (p) {
-           p[0] *= 0.2;
-           p[1] *= 0.2;
+           p[0] *= 0.3;
+           p[1] *= 0.3;
          });
        });
      },
